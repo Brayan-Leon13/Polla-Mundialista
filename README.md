@@ -79,3 +79,49 @@ npm run dev                     # http://localhost:5173
 
 > Nota: el backend está en el plan free de Render, que "duerme" tras ~15 min de inactividad. La primera petición después de estar dormido puede tardar 30-50 segundos en responder.
 
+## Diagrama de arquitectura
+
+![Diagrama de arquitectura](./architecture-diagram.svg)
+
+La aplicación sigue una arquitectura de 3 capas con separación clara entre front-end y back-end:
+
+- **Frontend (Vercel):** SPA en React que consume la API vía HTTP/JSON. Se eligió por ser el stack más rápido de iterar para una interfaz con estado de sesión (login) y formularios dinámicos (predicciones).
+- **Backend (Render):** API REST con FastAPI, organizada en 4 módulos independientes (routers) que reflejan los 4 módulos funcionales pedidos en el enunciado: `auth`, `matches` (predicciones), `admin`, `leaderboard`. Cada uno es un archivo separado con responsabilidad única, lo que permite escalarlos o desplegarlos por separado si el proyecto creciera (por ejemplo, separar `admin` en su propio servicio con reglas de acceso distintas).
+- **Base de datos (PostgreSQL en Render):** relacional, porque el dominio (usuarios, partidos, predicciones) tiene relaciones 1-a-muchos claras y necesita integridad referencial (una predicción siempre pertenece a un usuario y a un partido que existen).
+- **Autenticación:** JWT sin estado (stateless), lo que permite escalar el backend horizontalmente (múltiples instancias) sin necesitar sesiones compartidas en memoria.
+
+### Esquema de la base de datos
+
+```mermaid
+erDiagram
+  GROUPS ||--o{ MATCHES : contiene
+  USERS ||--o{ PREDICTIONS : realiza
+  MATCHES ||--o{ PREDICTIONS : tiene
+  USERS {
+    int id PK
+    string email
+    string password_hash
+    string role
+  }
+  GROUPS {
+    int id PK
+    string name
+  }
+  MATCHES {
+    int id PK
+    int group_id FK
+    string home_team
+    string away_team
+    datetime match_date
+    int home_score_real
+    int away_score_real
+  }
+  PREDICTIONS {
+    int id PK
+    int user_id FK
+    int match_id FK
+    int home_score_pred
+    int away_score_pred
+    int points
+  }
+```
