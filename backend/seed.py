@@ -24,7 +24,9 @@ if not admin:
     db.add(admin)
     print(f"Admin creado: {settings.admin_email} / {settings.admin_password}")
 else:
-    print("Admin ya existia, no se recreo.")
+    admin.password_hash = hash_password(settings.admin_password)
+    admin.role = Role.admin
+    print(f"Admin ya existia, password reseteado: {settings.admin_email} / {settings.admin_password}")
 
 # --- Grupos ---
 group_a = db.query(Group).filter(Group.name == "Grupo A").first()
