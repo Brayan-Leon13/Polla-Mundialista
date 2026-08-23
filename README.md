@@ -72,10 +72,10 @@ npm run dev                     # http://localhost:5173
 
 ## Deploy
 
-- **URL de la app:** _(completar antes del entregable)_
-- **Usuario Admin:** _(completar)_
-- **Usuario de prueba:** _(completar)_
+- **URL de la app:** https://polla-mundialista-orcin.vercel.app
+- **API / documentación interactiva:** https://polla-mundialista-jtcp.onrender.com/docs
+- **Usuario Admin:** admin@admin.com / 123456
+- **Usuario de prueba:** no hay uno fijo — cualquier persona puede crear su propia cuenta desde `/register` en el frontend
 
-## Diagrama de arquitectura
+> Nota: el backend está en el plan free de Render, que "duerme" tras ~15 min de inactividad. La primera petición después de estar dormido puede tardar 30-50 segundos en responder.
 
-_(se entrega el dia de la presentacion en vivo — ver AI_LOG.md tambien)_
